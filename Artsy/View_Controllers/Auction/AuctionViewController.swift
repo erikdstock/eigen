@@ -44,6 +44,7 @@ class AuctionViewController: UIViewController {
 
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.ARAuctionArtworkRegistrationUpdated, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.ARAuctionArtworkBidUpdated, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -83,6 +84,7 @@ class AuctionViewController: UIViewController {
             }.error { error in
                 // TODO: Error-handling somehow
             }
+        NotificationCenter.default.addObserver(self, selector: #selector(AuctionViewController.artworkBidUpdated(_:)), name: NSNotification.Name.ARAuctionArtworkBidUpdated, object: nil)
 
         NotificationCenter.default.addObserver(self, selector: #selector(AuctionViewController.registrationUpdated(_:)), name: NSNotification.Name.ARAuctionArtworkRegistrationUpdated, object: nil)
     }
@@ -357,6 +359,10 @@ extension AuctionViewController {
 
 fileprivate typealias NotificationCenterObservers = AuctionViewController
 extension NotificationCenterObservers {
+    @objc func artworkBidUpdated(_ notification: Notification) {
+        NSLog("artwork bid updated: \(self.saleID)")
+        self.fetchLotStandingsAndUpdate()
+    }
     @objc func registrationUpdated(_ notification: Notification) {
         networkModel.fetchBidders(self.saleID).next { [weak self] bidders in
             self?.saleViewModel.bidders = bidders
