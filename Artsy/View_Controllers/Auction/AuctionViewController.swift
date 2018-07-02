@@ -361,7 +361,11 @@ fileprivate typealias NotificationCenterObservers = AuctionViewController
 extension NotificationCenterObservers {
     @objc func artworkBidUpdated(_ notification: Notification) {
         NSLog("artwork bid updated: \(self.saleID)")
-        self.fetchLotStandingsAndUpdate()
+        DispatchQueue.main.async {
+                self.fetchLotStandingsAndUpdate()
+            // need to update view here
+        }
+        
     }
     @objc func registrationUpdated(_ notification: Notification) {
         networkModel.fetchBidders(self.saleID).next { [weak self] bidders in
