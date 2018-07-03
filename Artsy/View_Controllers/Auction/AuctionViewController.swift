@@ -1,5 +1,6 @@
 import UIKit
 import Then
+import Interstellar
 
 class AuctionViewController: UIViewController {
     @objc let saleID: String
@@ -147,10 +148,10 @@ extension AuctionViewController {
     }
 
     // Fetches new lot standings, updates the model, removes the old standings view, and adds a fresh one.
-    func fetchLotStandingsAndUpdate() {
-        guard let saleViewModel = saleViewModel else { return }
+    func fetchLotStandingsAndUpdate() -> Observable<Result<[LotStanding]>> {
+        guard let saleViewModel = saleViewModel else { return Observable() }
 
-        self.networkModel.fetchLotStanding(self.saleID).next { [weak self] lotStandings in
+        return self.networkModel.fetchLotStanding(self.saleID).next { [weak self] lotStandings in
             saleViewModel.updateLotStandings(lotStandings)
 
             if let existingLotStandingsView = self?.headerStack?.viewWithTag(ViewTags.lotStandings.rawValue) {
@@ -362,7 +363,10 @@ extension NotificationCenterObservers {
     @objc func artworkBidUpdated(_ notification: Notification) {
         NSLog("artwork bid updated: \(self.saleID)")
         DispatchQueue.main.async {
-                self.fetchLotStandingsAndUpdate()
+            self.fetchLotStandingsAndUpdate().next { _ in
+                self.setupForSale(self.saleViewModel)
+                
+            }
             // need to update view here
         }
         

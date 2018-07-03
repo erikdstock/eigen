@@ -75,6 +75,7 @@ class AuctionViewControllerTests: QuickSpec {
                 }
             }
 
+
             it("looks good when registration status changes") {
                 let subject = AuctionViewController(saleID: sale.saleID)
                 subject.allowAnimations = false
