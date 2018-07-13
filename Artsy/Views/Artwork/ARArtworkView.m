@@ -114,7 +114,7 @@ static const CGFloat ARArtworkImageHeightAdjustmentForPhone = -56;
 
 - (void)setUpCallbacks
 {
-    __weak typeof (self) wself = self;
+    __weak typeof(self) wself = self;
 
     void (^completion)(void) = ^{
         __strong typeof (wself) sself = wself;
@@ -162,12 +162,10 @@ static const CGFloat ARArtworkImageHeightAdjustmentForPhone = -56;
     if ([notification.userInfo[ARAuctionArtworkIDKey] isEqualToString:self.artwork.artworkID]) {
         // keep this?
         [self.artwork updateSaleArtwork];
-        
+
         // 1. Call self.metadataview.ctionView.showSpinner()
         // 2. Make a call to onSaleArtworkUpdate with allowCachedno
         // 3. In callback from 2., update our self.banner.auctionState and also call self.matadataview.actionVIew.updateSaleArtwork(saleASrtwork)
-    
-        
     }
 }
 
